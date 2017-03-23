@@ -12,10 +12,9 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Title)
-                </th>
-
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Artist)
             </th>
@@ -29,15 +28,17 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Title)
+                <a asp-action="Details" asp-route-id="@item.AlbumID">@Html.DisplayFor(modelItem => item.Title)</a>
             </td>
 
             <td>
-                @Html.DisplayFor(modelItem => item.Genre.Name)
+                <a asp-controller="Artists" asp-action="Details" asp-route-id="@item.ArtistID">@Html.DisplayFor(modelItem => item.Artist.Name)</a>
+            </td>
+            <td>
+                <a asp-controller="Genres" asp-action="Details" asp-route-id="@item.GenreID">@Html.DisplayFor(modelItem => item.Genre.Name)</a>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.AlbumID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.AlbumID">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.AlbumID">Delete</a>
             </td>
         </tr>
