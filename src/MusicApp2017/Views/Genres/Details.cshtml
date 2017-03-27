@@ -1,4 +1,4 @@
-@model MusicApp2017.Models.Genre
+@model IEnumerable<MusicApp2017.Models.Album>
 
 @{
     ViewData["Title"] = "Details";
@@ -11,14 +11,35 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            Genre:
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Model.First().Genre.Name
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.GenreID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Album</th>
+            <th>Artist</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-controller="Albums" asp-action="Details" asp-route-id="@item.AlbumID">@Html.DisplayFor(modelItem => item.Title)</a>
+                </td>
+                <td>
+                    <a asp-controller="Genres" asp-action="Details" asp-route-id="@item.GenreID">@Html.DisplayFor(modelItem => item.Artist.Name)</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="btn-group">
+    <a asp-action="Edit" asp-route-id="@Model.First().ArtistID" class="btn btn-lg btn-warning">Edit Genre</a>
+    <a asp-action="Index" asp-controller="Albums" class="btn btn-lg btn-info">Back to Albums</a>
 </div>

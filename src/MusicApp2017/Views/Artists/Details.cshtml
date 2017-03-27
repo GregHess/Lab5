@@ -1,4 +1,4 @@
-@model MusicApp2017.Models.Artist
+@model IEnumerable<MusicApp2017.Models.Album>
 
 @{
     ViewData["Title"] = "Details";
@@ -11,14 +11,42 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            Name:
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Model.First().Artist.Name
+        </dd>
+    </dl>
+    <dl class="dl-horizontal">
+        <dt>
+            Bio:
+        </dt>
+        <dd>
+            @Model.First().Artist.Name
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.ArtistID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Album</th>
+            <th>Genre</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <a asp-controller="Albums" asp-action="Details" asp-route-id="@item.AlbumID">@Html.DisplayFor(modelItem => item.Title)</a>
+            </td>
+            <td>
+                <a asp-controller="Genres" asp-action="Details" asp-route-id="@item.GenreID">@Html.DisplayFor(modelItem => item.Genre.Name)</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<div class="btn-group">
+    <a asp-action="Edit" asp-route-id="@Model.First().Artist.ArtistID" class="btn btn-lg btn-warning">Edit Artist</a>
+    <a asp-action="Index" asp-controller="Albums" class="btn btn-lg btn-info">Back to Albums</a>
 </div>

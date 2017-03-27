@@ -32,8 +32,13 @@ namespace MusicApp2017.Controllers
                 return NotFound();
             }
 
-            var genre = await _context.Genres
-                .SingleOrDefaultAsync(m => m.GenreID == id);
+            //var genre = await _context.Genres
+            //    .SingleOrDefaultAsync(m => m.GenreID == id);
+
+            var albumsContext = _context.Albums.Include(a => a.Artist).Include(a => a.Genre);
+
+            var genre = await albumsContext.Where(a => a.GenreID == id).ToListAsync();
+
             if (genre == null)
             {
                 return NotFound();

@@ -24,6 +24,24 @@ namespace MusicApp2017.Controllers
             return View(await _context.Artists.ToListAsync());
         }
 
+        //// GET: Artists/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var artist = await _context.Artists
+        //        .SingleOrDefaultAsync(m => m.ArtistID == id);
+        //    if (artist == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(artist);
+        //}
+
         // GET: Artists/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -32,14 +50,16 @@ namespace MusicApp2017.Controllers
                 return NotFound();
             }
 
-            var artist = await _context.Artists
-                .SingleOrDefaultAsync(m => m.ArtistID == id);
-            if (artist == null)
+            var albumsContext = _context.Albums.Include(a => a.Artist).Include(a => a.Genre);
+
+            var albums = await albumsContext.Where(a => a.ArtistID == id).ToListAsync();
+
+            if (albums == null)
             {
                 return NotFound();
             }
 
-            return View(artist);
+            return View(albums);
         }
 
         // GET: Artists/Create

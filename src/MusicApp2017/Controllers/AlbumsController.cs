@@ -26,20 +26,44 @@ namespace MusicApp2017.Controllers
         }
 
         // GET: Albums/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var albumContext = _context.Albums
+        //        .Include(a => a.Artist)
+        //        .Include(a => a.Genre);
+        //    var album = await albumContext
+        //        .SingleOrDefaultAsync(m => m.AlbumID == id);
+        //    if (album == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(album);
+        //}
+
+        // GET: Albums/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
+                Response.StatusCode = 404;
                 return NotFound();
             }
 
-            var albumContext =  _context.Albums
+            var albumContext = _context.Albums
                 .Include(a => a.Artist)
                 .Include(a => a.Genre);
-            var album = await albumContext
-                .SingleOrDefaultAsync(m => m.AlbumID == id);
+            //var album = await albumContext
+            //    .SingleOrDefaultAsync(m => m.AlbumID == id);
+            var album = await albumContext.Where(m => m.AlbumID == id).ToListAsync();
             if (album == null)
             {
+                Response.StatusCode = 404;
                 return NotFound();
             }
 
