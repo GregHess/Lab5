@@ -164,6 +164,7 @@ namespace MusicApp2017.Controllers
             return RedirectToAction("Index");
         }
 
+    
         private bool ArtistExists(int id)
         {
             return _context.Artists.Any(e => e.ArtistID == id);
