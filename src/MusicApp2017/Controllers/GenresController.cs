@@ -60,7 +60,7 @@ namespace MusicApp2017.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("GenreID,Name")] Genre genre)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !this.GenreExists(genre.Name))
             {
                 _context.Add(genre);
                 await _context.SaveChangesAsync();
@@ -120,23 +120,23 @@ namespace MusicApp2017.Controllers
             return View(genre);
         }
 
-        // GET: Genres/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //// GET: Genres/Delete/5
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var genre = await _context.Genres
-                .SingleOrDefaultAsync(m => m.GenreID == id);
-            if (genre == null)
-            {
-                return NotFound();
-            }
+        //    var genre = await _context.Genres
+        //        .SingleOrDefaultAsync(m => m.GenreID == id);
+        //    if (genre == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(genre);
-        }
+        //    return View(genre);
+        //}
 
         // POST: Genres/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -152,6 +152,11 @@ namespace MusicApp2017.Controllers
         private bool GenreExists(int id)
         {
             return _context.Genres.Any(e => e.GenreID == id);
+        }
+
+        private bool GenreExists(string name)
+        {
+            return _context.Genres.Any(e => e.Name == name);
         }
     }
 }

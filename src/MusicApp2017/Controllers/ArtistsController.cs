@@ -73,9 +73,9 @@ namespace MusicApp2017.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ArtistID,Name")] Artist artist)
+        public async Task<IActionResult> Create([Bind("ArtistID,Name,Bio")] Artist artist)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !this.ArtistExists(artist.Name))
             {
                 _context.Add(artist);
                 await _context.SaveChangesAsync();
@@ -105,7 +105,7 @@ namespace MusicApp2017.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ArtistID,Name")] Artist artist)
+        public async Task<IActionResult> Edit(int id, [Bind("ArtistID,Name,Bio")] Artist artist)
         {
             if (id != artist.ArtistID)
             {
@@ -167,6 +167,11 @@ namespace MusicApp2017.Controllers
         private bool ArtistExists(int id)
         {
             return _context.Artists.Any(e => e.ArtistID == id);
+        }
+
+        private bool ArtistExists(string name)
+        {
+            return _context.Artists.Any(e => e.Name == name);
         }
     }
 }

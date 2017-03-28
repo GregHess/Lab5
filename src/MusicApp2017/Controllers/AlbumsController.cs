@@ -186,5 +186,10 @@ namespace MusicApp2017.Controllers
         {
             return _context.Albums.Any(e => e.AlbumID == id);
         }
+
+        private bool AlbumExists(string title)
+        {
+            return _context.Albums.Any(e => e.Title == title);
+        }
     }
 }
