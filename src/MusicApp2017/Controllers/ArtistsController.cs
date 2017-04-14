@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MusicApp2017.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MusicApp2017.Controllers
 {
@@ -63,6 +64,7 @@ namespace MusicApp2017.Controllers
         }
 
         // GET: Artists/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -73,6 +75,7 @@ namespace MusicApp2017.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("ArtistID,Name,Bio")] Artist artist)
         {
             if (ModelState.IsValid && !this.ArtistExists(artist.Name))
@@ -85,6 +88,7 @@ namespace MusicApp2017.Controllers
         }
 
         // GET: Artists/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -105,6 +109,7 @@ namespace MusicApp2017.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("ArtistID,Name,Bio")] Artist artist)
         {
             if (id != artist.ArtistID)
@@ -136,6 +141,7 @@ namespace MusicApp2017.Controllers
         }
 
         // GET: Artists/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -156,6 +162,7 @@ namespace MusicApp2017.Controllers
         // POST: Artists/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var artist = await _context.Artists.SingleOrDefaultAsync(m => m.ArtistID == id);
