@@ -18,6 +18,9 @@ namespace MusicApp2017.Models.AccountViewModels
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
+        
+        [Display(Name = "Favorite Genre")]
+        public int GenreID { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]

@@ -16,16 +16,50 @@ namespace MusicApp2017.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly string _externalCookieScheme;
 
+        private readonly MusicDbContext _context;
+
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IOptions<IdentityCookieOptions> identityCookieOptions
+            IOptions<IdentityCookieOptions> identityCookieOptions, MusicDbContext context
            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _externalCookieScheme = identityCookieOptions.Value.ExternalCookieAuthenticationScheme;
-         }
+            _context = context;
+        }
+
+        // GET: /Account/Profile
+        [HttpGet]
+        public async Task<IActionResult> Profile(ProfileViewModel profile, string returnUrl = null)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            profile.Email = currentUser.Email;
+            profile.GenreID = currentUser.GenreID;
+
+            ViewData["ReturnUrl"] = returnUrl;
+            ViewData["GenreID"] = new SelectList(_context.Genres, "GenreID", "Name");
+
+            return View(profile);
+        }
+
+        // GET: /Account/Update
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> Update(ProfileViewModel profile, string returnUrl = null)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            
+            currentUser.GenreID = profile.GenreID;
+
+            _context.Update(currentUser);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Profile");
+        }
 
         //
         // GET: /Account/Login
@@ -80,6 +114,7 @@ namespace MusicApp2017.Controllers
         public IActionResult Register(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+            ViewData["GenreID"] = new SelectList(_context.Genres, "GenreID", "Name");
             return View();
         }
 

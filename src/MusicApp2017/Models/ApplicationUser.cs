@@ -9,6 +9,9 @@ namespace MusicApp2017.Models
     public class ApplicationUser : IdentityUser
     {
         // Define custom properties here
+
+        //Foreign Key
+        public int GenreID { get; set; }
     }
 
 }
