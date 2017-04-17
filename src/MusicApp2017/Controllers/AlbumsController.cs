@@ -22,6 +22,7 @@ namespace MusicApp2017.Controllers
             _context = context;    
         }
 
+    
         // GET: Albums
         public async Task<IActionResult> Index()
         {

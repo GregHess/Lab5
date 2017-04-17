@@ -52,7 +52,7 @@ namespace MusicApp2017.Controllers
         public async Task<IActionResult> Update(ProfileViewModel profile, string returnUrl = null)
         {
             var currentUser = await _userManager.GetUserAsync(User);
-            
+
             currentUser.GenreID = profile.GenreID;
 
             _context.Update(currentUser);
