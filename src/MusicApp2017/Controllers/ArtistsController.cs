@@ -88,7 +88,7 @@ namespace MusicApp2017.Controllers
         }
 
         // GET: Artists/Edit/5
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -109,7 +109,7 @@ namespace MusicApp2017.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int id, [Bind("ArtistID,Name,Bio")] Artist artist)
         {
             if (id != artist.ArtistID)
