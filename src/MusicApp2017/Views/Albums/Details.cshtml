@@ -30,7 +30,28 @@
         <dd>
             <a asp-controller="Genres" asp-action="Details" asp-route-id="@Model.First().GenreID">@Model.First().Genre.Name</a>
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AverageRating)
+        </dt>
+        <dd>
+            <p>@Model.First().AverageRating</p>
+            <form method="post" class="form-inline" asp-controller="Albums" asp-action="Rate" asp-route-id="@Model.First().AlbumID">
+                <input type="hidden" name="AlbumID">
+                <div class="form-group">
+                    <select class="form-control input-sm" asp-for="Title">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                    <div class="form-group">
+                        <input type="submit" value="Rate" class="btn btn-sm btn-info">
+                    </div>
+                </div>
+            </form></dd>
     </dl>
+    
 </div>
 
 <br />

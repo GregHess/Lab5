@@ -88,6 +88,31 @@ namespace MusicApp2017.Controllers
             return View(album);
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> Rate(int? id, int albumView)
+        {
+            var albumContext = _context.Albums
+                .Include(a => a.Artist)
+                .Include(a => a.Genre);
+            var album = await albumContext
+                .SingleOrDefaultAsync(m => m.AlbumID == id);
+
+            var rating = new Rating { AlbumID = id.Value, Score = albumView.Score };
+            _context.Add(rating);
+
+
+            await _context.SaveChangesAsync();
+            albumView = new AlbumViewModel(album);
+            albumView.Score = GetAverageAlbumRating(album.AlbumID);
+            albumView.Count = GetRatingCount(album.AlbumID);
+            album.AvgRating = GetAverageAlbumRating(album.AlbumID);
+            _context.Update(album);
+            await _context.SaveChangesAsync();
+
+            return View("Details", albumView);
+        }
+
         // GET: Albums/Create
         [Authorize]
         public IActionResult Create()
@@ -103,7 +128,7 @@ namespace MusicApp2017.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("AlbumID,Title,ArtistID,GenreID,Likes")] Album album)
+        public async Task<IActionResult> Create([Bind("AlbumID,Title,ArtistID,GenreID")] Album album)
         { 
             if (ModelState.IsValid)
             {

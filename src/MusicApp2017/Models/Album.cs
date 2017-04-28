@@ -18,9 +18,13 @@ namespace MusicApp2017.Models
         // Navigation property
         public Artist Artist { get; set; }
         // Foreign key
-        [Display(Name ="Genre")]
+        [Display(Name = "Genre")]
         public int GenreID { get; set; }
         // Navigation property
         public Genre Genre { get; set; }
+
+        [Display(Name = "Rating")]
+        [DisplayFormat(DataFormatString = "{0:0.0}")]
+        public decimal AverageRating { get; set; }
     }
 }

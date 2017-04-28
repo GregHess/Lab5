@@ -37,6 +37,9 @@
             <td>
                 <a asp-controller="Genres" asp-action="Details" asp-route-id="@item.GenreID">@Html.DisplayFor(modelItem => item.Genre.Name)</a>
             </td>
+            <td>
+                <a asp-controller="Albums" asp-action="Details" asp-route-id="@item.AlbumID">@Html.DisplayFor(modelItem => item.AverageRating)</a>
+            </td>
             <td class="btn-group">
                 <a asp-action="Edit" asp-route-id="@item.AlbumID" class="btn btn-sm btn-warning">Edit</a>
                 <a asp-action="Delete" asp-route-id="@item.AlbumID" class="btn btn-sm btn-danger">Delete</a>

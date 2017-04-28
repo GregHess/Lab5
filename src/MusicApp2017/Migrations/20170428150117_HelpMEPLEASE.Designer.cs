@@ -8,9 +8,10 @@ using MusicApp2017.Models;
 namespace MusicApp2017.Migrations
 {
     [DbContext(typeof(MusicDbContext))]
-    partial class MusicDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170428150117_HelpMEPLEASE")]
+    partial class HelpMEPLEASE
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -130,9 +131,9 @@ namespace MusicApp2017.Migrations
 
                     b.Property<int>("ArtistID");
 
-                    b.Property<decimal>("AverageRating");
-
                     b.Property<int>("GenreID");
+
+                    b.Property<int>("RatingID");
 
                     b.Property<string>("Title")
                         .IsRequired();
@@ -142,6 +143,8 @@ namespace MusicApp2017.Migrations
                     b.HasIndex("ArtistID");
 
                     b.HasIndex("GenreID");
+
+                    b.HasIndex("RatingID");
 
                     b.ToTable("Albums");
                 });
@@ -227,6 +230,20 @@ namespace MusicApp2017.Migrations
                     b.ToTable("Genres");
                 });
 
+            modelBuilder.Entity("MusicApp2017.Models.Rating", b =>
+                {
+                    b.Property<int>("RatingID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AlbumID");
+
+                    b.Property<int>("AverageRating");
+
+                    b.HasKey("RatingID");
+
+                    b.ToTable("Rating");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole")
@@ -274,6 +291,11 @@ namespace MusicApp2017.Migrations
                     b.HasOne("MusicApp2017.Models.Genre", "Genre")
                         .WithMany()
                         .HasForeignKey("GenreID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MusicApp2017.Models.Rating", "Rating")
+                        .WithMany()
+                        .HasForeignKey("RatingID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
         }
