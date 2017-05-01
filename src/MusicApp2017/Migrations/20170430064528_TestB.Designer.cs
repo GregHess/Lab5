@@ -8,9 +8,10 @@ using MusicApp2017.Models;
 namespace MusicApp2017.Migrations
 {
     [DbContext(typeof(MusicDbContext))]
-    partial class MusicDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170430064528_TestB")]
+    partial class TestB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -234,9 +235,7 @@ namespace MusicApp2017.Migrations
 
                     b.Property<int>("AlbumID");
 
-                    b.Property<string>("Id");
-
-                    b.Property<decimal>("RatingValue");
+                    b.Property<int>("AverageRating");
 
                     b.HasKey("RatingID");
 

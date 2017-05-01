@@ -1,4 +1,6 @@
-@model IEnumerable<MusicApp2017.Models.Album>
+@*@model Tuple<MusicApp2017.Models.Album, MusicApp2017.Models.Rating>*@
+
+@model MusicApp2017.Models.AlbumViewModels.AlbumViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -13,50 +15,57 @@
 
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model.Album.Title)
         </dt>
         <dd>
-            @Model.First().Title
+            @Model.Album.Title
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Artist)
+            @Html.DisplayNameFor(model => model.Album.Artist)
         </dt>
         <dd>
-            <a asp-controller="Artists" asp-action="Details" asp-route-id="@Model.First().ArtistID">@Model.First().Artist.Name</a>
+            <a asp-controller="Artists" asp-action="Details" asp-route-id="@Model.Album.ArtistID">@Model.Album.Artist.Name</a>
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Genre)
+            @Html.DisplayNameFor(model => model.Album.Genre)
         </dt>
         <dd>
-            <a asp-controller="Genres" asp-action="Details" asp-route-id="@Model.First().GenreID">@Model.First().Genre.Name</a>
+            <a asp-controller="Genres" asp-action="Details" asp-route-id="@Model.Album.GenreID">@Model.Album.Genre.Name</a>
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.AverageRating)
+            @Html.DisplayNameFor(model => model.Album.AverageRating)
         </dt>
         <dd>
-            <p>@Model.First().AverageRating</p>
-            <form method="post" class="form-inline" asp-controller="Albums" asp-action="Rate" asp-route-id="@Model.First().AlbumID">
-                <input type="hidden" name="AlbumID">
-                <div class="form-group">
-                    <select class="form-control input-sm" asp-for="Title">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                    </select>
-                    <div class="form-group">
-                        <input type="submit" value="Rate" class="btn btn-sm btn-info">
-                    </div>
-                </div>
-            </form></dd>
+            <p>@Model.Album.AverageRating</p>
+        </dd>
     </dl>
+
+    <div class="panel panel-info" style="padding: 1em; width: 15em;">
+        <form asp-controller="Albums" asp-action="Rate" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-inline">
+            <h4>Rate this album.</h4>
+            <hr />
+            <input type="hidden" asp-for="Album.AlbumID" />
+            <div class="form-group">
+                <select class="form-control input-sm" asp-for="RatingValue">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-sm btn-info">Rate</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
     
 </div>
 
 <br />
 
 <div class="btn-group">
-    <a asp-action="Edit" asp-route-id="@Model.First().AlbumID" class="btn btn-lg btn-warning">Edit Album</a>
+    <a asp-action="Edit" asp-route-id="@Model.Album.AlbumID" class="btn btn-lg btn-warning">Edit Album</a>
     <a asp-action="Index" asp-controller="Albums" class="btn btn-lg btn-info">Back to Albums</a>
 </div>

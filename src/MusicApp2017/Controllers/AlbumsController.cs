@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using MusicApp2017.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using MusicApp2017.Models.AlbumViewModels;
 
 namespace MusicApp2017.Controllers
 {
@@ -39,32 +38,9 @@ namespace MusicApp2017.Controllers
                 return View(await musicDbContext.ToListAsync());
             }
 
-            //var musicDbContext = _context.Albums.Include(a => a.Artist).Include(a => a.Genre);
-            //return View(await musicDbContext.ToListAsync());
         }
 
-        // GET: Albums/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var albumContext = _context.Albums
-        //        .Include(a => a.Artist)
-        //        .Include(a => a.Genre);
-        //    var album = await albumContext
-        //        .SingleOrDefaultAsync(m => m.AlbumID == id);
-        //    if (album == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(album);
-        //}
-
-        // GET: Albums/Details/5
+        // GET: Albums/Details/{AlbumID}
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -76,41 +52,20 @@ namespace MusicApp2017.Controllers
             var albumContext = _context.Albums
                 .Include(a => a.Artist)
                 .Include(a => a.Genre);
-            //var album = await albumContext
-            //    .SingleOrDefaultAsync(m => m.AlbumID == id);
-            var album = await albumContext.Where(m => m.AlbumID == id).ToListAsync();
+
+            var album = await albumContext.Where(m => m.AlbumID == id).SingleOrDefaultAsync();
+
             if (album == null)
             {
                 Response.StatusCode = 404;
                 return NotFound();
             }
 
-            return View(album);
-        }
+            AlbumViewModel AVM = new AlbumViewModel();
 
+            AVM.Album = album;
 
-        [HttpPost]
-        public async Task<IActionResult> Rate(int? id, int albumView)
-        {
-            var albumContext = _context.Albums
-                .Include(a => a.Artist)
-                .Include(a => a.Genre);
-            var album = await albumContext
-                .SingleOrDefaultAsync(m => m.AlbumID == id);
-
-            var rating = new Rating { AlbumID = id.Value, Score = albumView.Score };
-            _context.Add(rating);
-
-
-            await _context.SaveChangesAsync();
-            albumView = new AlbumViewModel(album);
-            albumView.Score = GetAverageAlbumRating(album.AlbumID);
-            albumView.Count = GetRatingCount(album.AlbumID);
-            album.AvgRating = GetAverageAlbumRating(album.AlbumID);
-            _context.Update(album);
-            await _context.SaveChangesAsync();
-
-            return View("Details", albumView);
+            return View(AVM);
         }
 
         // GET: Albums/Create
@@ -141,7 +96,7 @@ namespace MusicApp2017.Controllers
             return View(album);
         }
 
-        // GET: Albums/Edit/5
+        // GET: Albums/Edit/{AlbumID}
         [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -160,13 +115,13 @@ namespace MusicApp2017.Controllers
             return View(album);
         }
 
-        // POST: Albums/Edit/5
+        // POST: Albums/Edit/{AlbumID}
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("AlbumID,Title,ArtistID,GenreID,Likes")] Album album)
+        public async Task<IActionResult> Edit(int id, [Bind("AlbumID,Title,ArtistID,GenreID")] Album album)
         {
             if (id != album.AlbumID)
             {
@@ -198,7 +153,61 @@ namespace MusicApp2017.Controllers
             return View(album);
         }
 
-        // GET: Albums/Delete/5
+        /*
+         * Rate must update the album averageRating.
+         * 
+         * 
+         */
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> Rate(AlbumViewModel AVM)
+        {
+
+            //If the AlbumViewModel is null or the rating input values are out of range return not found.
+            if (AVM.Album == null || AVM.RatingValue <= 0 || AVM.RatingValue >= 6)
+            {
+                return NotFound();
+            }
+
+            //TODO Attach the user ID to the rating & stop users from rating an album twice.
+
+            //Create the new rating, add it to the database, and save the changes.
+            var rating = new Rating { AlbumID = AVM.Album.AlbumID, RatingValue = AVM.RatingValue };
+            _context.Add(rating);
+            await _context.SaveChangesAsync();
+
+            /**
+             * Get the list of ratings for the selected album.
+             * Find the sum of the ratings.
+             * Divide the sum by the amount of ratings to get the average rating.
+             * Update the albums average rating.
+             * 
+             */
+            var ratingList = await _context.Ratings.Where(m => m.AlbumID == AVM.Album.AlbumID).ToListAsync();
+
+            var ratingArray = ratingList.ToArray();
+
+            decimal ratingSum = 0;
+
+            for (int i = 0; i < ratingArray.Length; i++)
+            {
+                ratingSum = ratingSum + ratingArray[i].RatingValue;
+            }
+
+            decimal calculateAverageRating = ratingSum / ratingList.Count;
+
+            //Save changes made to the album to the database.
+            var album = await _context.Albums.Where(m => m.AlbumID == AVM.Album.AlbumID).SingleOrDefaultAsync();
+            album.AverageRating = calculateAverageRating;
+            _context.Update(album);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+            //return View("Details", AVM.Album.AlbumID);
+        }
+
+        // GET: Albums/Delete/{AlbumID}
         [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -219,7 +228,7 @@ namespace MusicApp2017.Controllers
             return View(album);
         }
 
-        // POST: Albums/Delete/5
+        // POST: Albums/Delete/{AlbumID}
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize]

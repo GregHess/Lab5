@@ -10,12 +10,12 @@ namespace MusicApp2017.Models
     {
         public int RatingID { get; set; }
 
-        public int AverageRating { get; set; }
-
-        public int NumberOfRatings { get; set; }
+        public decimal RatingValue { get; set; }
 
         [ForeignKey("Albums")]
         public int AlbumID { get; set; }
-        
+
+        [ForeignKey("AspNetUsers")]
+        public string Id { get; set; }
     }
 }
