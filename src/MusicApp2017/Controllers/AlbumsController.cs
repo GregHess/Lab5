@@ -21,8 +21,9 @@ namespace MusicApp2017.Controllers
             _context = context;    
         }
 
-    
+
         // GET: Albums
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -41,6 +42,7 @@ namespace MusicApp2017.Controllers
         }
 
         // GET: Albums/Details/{AlbumID}
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -69,6 +71,7 @@ namespace MusicApp2017.Controllers
         }
 
         // GET: Albums/Create
+        [HttpGet]
         [Authorize]
         public IActionResult Create()
         {
