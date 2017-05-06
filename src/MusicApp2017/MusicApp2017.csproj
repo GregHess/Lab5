@@ -8,6 +8,16 @@
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="wwwroot\app\albums\addalbum.component.html" />
+    <Content Include="wwwroot\app\albums\addalbum.component.ts" />
+    <Content Include="wwwroot\app\albums\album.component.html" />
+    <Content Include="wwwroot\app\albums\album.component.ts" />
+    <Content Include="wwwroot\app\albums\albumlist.component.html" />
+    <Content Include="wwwroot\app\albums\albumlist.component.ts" />
+    <Content Include="wwwroot\app\albums\artistdropdown.component.html" />
+    <Content Include="wwwroot\app\albums\artistdropdown.component.ts" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.1" />

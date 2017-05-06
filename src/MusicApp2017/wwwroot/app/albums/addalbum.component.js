@@ -1,0 +1,53 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var core_1 = require("@angular/core");
+var http_1 = require("@angular/http");
+var AddAlbumComponent = (function () {
+    function AddAlbumComponent(http) {
+        this.http = http;
+        this.model = new Album();
+        this.showForm = false;
+    }
+    AddAlbumComponent.prototype.onSubmit = function (form) {
+        var _this = this;
+        var headers = new http_1.Headers();
+        headers.append('Content-Type', 'application/json');
+        this.http.post('/api/AlbumsAPI', JSON.stringify(this.model), { headers: headers }).subscribe(function (res) { return _this.postResponse = res.json(); });
+        form.reset();
+        this.showForm = !this.showForm;
+    };
+    AddAlbumComponent.prototype.toggleForm = function () {
+        this.showForm = !this.showForm;
+    };
+    return AddAlbumComponent;
+}());
+AddAlbumComponent = __decorate([
+    core_1.Component({
+        selector: 'addalbum',
+        templateUrl: './addalbum.component.html'
+    }),
+    __metadata("design:paramtypes", [http_1.Http])
+], AddAlbumComponent);
+exports.AddAlbumComponent = AddAlbumComponent;
+var Album = (function () {
+    function Album(title, artist, genre, averageRating) {
+        if (title === void 0) { title = null; }
+        if (artist === void 0) { artist = null; }
+        if (genre === void 0) { genre = null; }
+        if (averageRating === void 0) { averageRating = null; }
+        this.title = title;
+        this.artist = artist;
+        this.genre = genre;
+        this.averageRating = averageRating;
+    }
+    return Album;
+}());
+//# sourceMappingURL=addalbum.component.js.map

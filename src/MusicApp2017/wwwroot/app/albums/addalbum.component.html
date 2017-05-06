@@ -1,0 +1,51 @@
+﻿<button (click)="toggleForm()" class="btn btn-info btn-lg" *ngIf="!showForm">
+    Add an Album
+</button>
+<div *ngIf="showForm">
+    <form (ngSubmit)="onSubmit()" #f="ngForm">
+        <div class="form-horizontal">
+            <h4>Album</h4>
+            <hr />
+            <div class="form-group">
+                <label class="control-label col-md-2" for="title">Title</label>
+                <div class="col-md-10">
+                    <input type="text" id="title" class="form-control"
+                           [(ngModel)]="model.title" name="title"
+                           #name="ngModel"
+                           required minlength="2" maxlength="25" />
+                    <div *ngIf="title.errors && title.touched"
+                         class="alert alert-danger">
+                        <div [hidden]="!title.errors.required">
+                            Title is required
+                        </div>
+                        <div [hidden]="!title.errors.minlength">
+                            Must be at least 2 characters
+                        </div>
+                        <div [hidden]="!title.errors.maxlength">
+                            Must be less than 25 characters
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2" for="artist">Artist</label>
+                <div class="col-md-10">
+                    <artistdropdown></artistdropdown>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2" for="genre">Genre</label>
+                <div class="col-md-10">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button type="submit" class="btn btn-info"
+                            [disabled]="!f.form.valid">
+                        Add Album
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

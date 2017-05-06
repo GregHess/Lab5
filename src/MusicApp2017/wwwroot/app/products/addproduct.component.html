@@ -1,0 +1,74 @@
+﻿<button (click)="toggleForm()" class="btn btn-info btn-lg" *ngIf="!showForm">
+    Add a Product
+</button>
+
+<div *ngIf="showForm">
+    <form (ngSubmit)="onSubmit()" #f="ngForm">
+        <div class="form-horizontal">
+            <h4>Product</h4>
+            <hr />
+            <div class="form-group">
+                <label class="control-label col-md-2" for="name">Name</label>
+                <div class="col-md-10">
+                    <input type="text" id="name" class="form-control"
+                           [(ngModel)]="model.name" name="name"
+                           #name="ngModel"
+                           required minlength="2" maxlength="25"/>
+
+                    <div *ngIf="name.errors && name.touched"
+                         class="alert alert-danger">
+                        <div [hidden]="!name.errors.required">
+                            Name is required
+                        </div>
+                        <div [hidden]="!name.errors.minlength">
+                            Must be at least 2 characters
+                        </div>
+                        <div [hidden]="!name.errors.maxlength">
+                            Must be less than 25 characters
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2" for="description">Description</label>
+                <div class="col-md-10">
+                    <textarea type="text" id="description" class="form-control"
+                              [(ngModel)]="model.description" name="description"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2" for="price">Price</label>
+                <div class="col-md-10">
+                    <input type="number" id="price" class="form-control"
+                           [(ngModel)]="model.price" name="price" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-2" for="category">Category</label>
+                <div class="col-md-10">
+                    <input type="text" id="category" class="form-control"
+                           [(ngModel)]="model.category" name="category"
+                           #category="ngModel"
+                           required/>
+                    <div *ngIf="category.errors && category.touched"
+                         class="alert alert-danger">
+                        <div [hidden]="!category.errors.required">
+                            category is required
+                        </div>
+                       
+                    </div>
+                    Pristine: {{category.pristine}}
+                    Dirty: {{category.dirty}}
+                    Touched: {{category.touched}}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button type="submit" class="btn btn-info"
+                            [disabled]="!f.form.valid">Save</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>

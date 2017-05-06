@@ -1,0 +1,16 @@
+﻿<h1>Product Details</h1>
+ 
+<p *ngIf="!product"><em>Loading product...</em></p>
+
+<div *ngIf="product">
+    <div>Product Name: {{product.name}}</div>
+
+    <div>Description: {{product.description}}</div>
+
+    <div>Category: {{product.category}}</div>
+
+    <div>Price: {{product.price}}</div>
+
+    <div>Amount due: {{product.amountDue}}</div>
+
+</div>

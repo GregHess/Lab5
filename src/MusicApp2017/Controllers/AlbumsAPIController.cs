@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MusicApp2017.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace MusicApp2017.Controllers
 {
@@ -14,17 +12,30 @@ namespace MusicApp2017.Controllers
     public class AlbumsAPIController : Controller
     {
         private readonly MusicDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AlbumsAPIController(MusicDbContext context)
+        public AlbumsAPIController(MusicDbContext context, UserManager<ApplicationUser> userManager)
         {
+            _userManager = userManager;
             _context = context;
         }
 
         // GET: api/AlbumsAPI
         [HttpGet]
-        public IEnumerable<Album> GetAlbums()
+        public async Task<IActionResult> GetAlbumsAsync()
         {
-            return _context.Albums;
+            if (User.Identity.IsAuthenticated)
+            {
+                var currentUser = await _userManager.GetUserAsync(User);
+                var musicDbContext = _context.Albums.Include(a => a.Artist).Include(a => a.Genre).OrderByDescending(a => a.GenreID == currentUser.GenreID);
+
+                return Ok(await musicDbContext.ToListAsync());
+            }
+            else
+            {
+                var musicDbContext = _context.Albums.Include(a => a.Artist).Include(a => a.Genre);
+                return Ok(await musicDbContext.ToListAsync());
+            }
         }
 
         // GET: api/AlbumsAPI/5
@@ -36,7 +47,11 @@ namespace MusicApp2017.Controllers
                 return BadRequest(ModelState);
             }
 
-            var album = await _context.Albums.SingleOrDefaultAsync(m => m.AlbumID == id);
+            var albumContext = _context.Albums
+                .Include(a => a.Artist)
+                .Include(a => a.Genre);
+
+            var album = await albumContext.Where(m => m.AlbumID == id).SingleOrDefaultAsync();
 
             if (album == null)
             {

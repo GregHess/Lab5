@@ -1,0 +1,26 @@
+﻿<h1>Product Details</h1>
+
+<p *ngIf="!products"><em>Loading products...</em></p>
+
+    <table class='table' *ngIf="products">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let product of products">
+                <td [routerLinkActive]="['link-active']">
+                    <a [routerLink]="['/products', product.productID]">{{ product.name }} </a>
+                </td>
+                <td>{{product.description}}</td>
+                <td>{{product.category}}</td>
+                <td>{{product.price | currency: 'USD': true}}</td>
+            </tr>
+        </tbody>
+    </table>
+<addproduct></addproduct>
+
